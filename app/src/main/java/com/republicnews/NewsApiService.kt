@@ -32,9 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// -----------------------------
-// 1️⃣ MODELOS DE DATOS (NewsData.io)
-// -----------------------------
+
 data class NewsArticle(
     val title: String?,
     val description: String?,
@@ -48,9 +46,7 @@ data class NewsDataResponse(
     val results: List<NewsArticle>?
 )
 
-// -----------------------------
-// 2️⃣ INTERFAZ DE API (NewsData.io)
-// -----------------------------
+
 interface NewsDataApi {
     @GET("latest")
     suspend fun getLatestNews(
@@ -59,9 +55,7 @@ interface NewsDataApi {
     ): NewsDataResponse
 }
 
-// -----------------------------
-// 3️⃣ CLIENTE RETROFIT
-// -----------------------------
+
 object RetrofitClient {
     private const val BASE_URL = "https://newsdata.io/api/1/"
 
@@ -74,9 +68,7 @@ object RetrofitClient {
     }
 }
 
-// -----------------------------
-// 4️⃣ MAIN ACTIVITY
-// -----------------------------
+
 class MainActivity : ComponentActivity() {
     private val apiKey = "pub_d6978009f37d454fa1bb2849e1acba0f"
 
@@ -97,9 +89,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// -----------------------------
-// 5️⃣ UI COMPOSABLE PRINCIPAL
-// -----------------------------
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsScreen(apiKey: String) {
@@ -115,7 +105,7 @@ fun NewsScreen(apiKey: String) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    // 🚀 Noticias iniciales: Colombia
+
     LaunchedEffect(Unit) {
         connectionType = getConnectionType(context)
         batteryLevel = getBatteryLevel(context)
@@ -145,7 +135,7 @@ fun NewsScreen(apiKey: String) {
 
     val scrollState = rememberScrollState()
 
-    // 🎨 INTERFAZ
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -162,7 +152,7 @@ fun NewsScreen(apiKey: String) {
         Text("🔋 Batería: $batteryLevel%", style = MaterialTheme.typography.bodySmall)
         Spacer(Modifier.height(16.dp))
 
-        // 🧠 Campo de búsqueda — se limpia al enfocar
+
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
@@ -171,17 +161,17 @@ fun NewsScreen(apiKey: String) {
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     if (focusState.isFocused) {
-                        query = TextFieldValue("") // 💡 Limpia el texto al hacer click
+                        query = TextFieldValue("")
                     }
                 }
         )
 
         Spacer(Modifier.height(8.dp))
 
-        // 🔘 Botón de búsqueda
+
         Button(
             onClick = {
-                // 🔹 Quitar foco y ocultar teclado al presionar buscar
+
                 focusManager.clearFocus()
                 keyboardController?.hide()
 
@@ -226,7 +216,7 @@ fun NewsScreen(apiKey: String) {
 
         Spacer(Modifier.height(16.dp))
 
-        // 📋 Resultados
+
         when {
             errorMessage != null -> Text("⚠️ $errorMessage", color = MaterialTheme.colorScheme.error)
             isLoading -> CircularProgressIndicator()
@@ -252,9 +242,7 @@ fun NewsScreen(apiKey: String) {
     }
 }
 
-// -----------------------------
-// 6️⃣ DETECCIÓN DE CONEXIÓN
-// -----------------------------
+
 fun getConnectionType(context: Context): String {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = cm.activeNetwork ?: return "Sin conexión"
@@ -267,9 +255,7 @@ fun getConnectionType(context: Context): String {
     }
 }
 
-// -----------------------------
-// 7️⃣ DETECCIÓN DE BATERÍA
-// -----------------------------
+
 fun getBatteryLevel(context: Context): Int {
     val batteryIntent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
     val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
